@@ -31,8 +31,8 @@ actions: {
         try {
             // await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie')
             const response = await axios.post('http://127.0.0.1:8000/api/login'  , {
-              name: 'Emad',
-              password: 123456
+              username: 'admin',
+              password: 'admin'
           })
             commit('setToken', response.data)
 
