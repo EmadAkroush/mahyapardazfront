@@ -6,6 +6,7 @@
 
 // Components
 import App from './App.vue'
+import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker'
 
 
 // Composables
@@ -14,7 +15,11 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
+
+
 const app = createApp(App)
+
+app.component('DatePicker', Vue3PersianDatetimePicker)
 
 registerPlugins(app)
 
