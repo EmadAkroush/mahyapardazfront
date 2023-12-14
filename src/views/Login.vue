@@ -11,7 +11,7 @@
         <v-text-field v-model="form.password" :counter="10"  type="password" :rules="[v => !!v ||  ' پس ورد  الزامیست ']"
           label="پس ورد" required></v-text-field>
 
-
+       {{ this.$store.state.logininter }}
         <v-btn color="success" class="c-btn mt-4" block @click="login">
          ورود
         </v-btn>
@@ -26,6 +26,7 @@
 </template>
 
 <script >
+
 import { useStore } from "vuex";
 export default {
   data() {
@@ -34,7 +35,8 @@ export default {
         username: null,
         password: null,
 
-      }
+      },
+      logininterme : null
     }
   },
   components: {
@@ -46,10 +48,17 @@ export default {
 
       const { valid } = await this.$refs.form.validate()
 
-      this.$store.dispatch('login', this.form);
+      await  this.$store.dispatch('login', this.form);
 
-      if (valid) alert('Form is valid')
+         this.logininterme = await this.$store.state.logininter;
+         console.log("jjj" ,  this.$store.state.logininter);
+        if( this.logininterme == true){
+        this.$router.push('/');
+      }
 
+    },
+    inter(){
+      this.$router.push('/');
     }
   },
 

@@ -10,13 +10,17 @@ const store = createStore({
     users: '',
     userError: '',
     task: '',
-    showTasks: ''
+    showTasks: '',
+    logininter: false
 
 },
 getters: {
      allTasks(state) {
          return state.showTasks
-     }
+     },
+    getloginToken(state) {
+        return state.loginToken
+    },
 },
 mutations: {
     setToken(state, loginToken) {
@@ -34,6 +38,9 @@ mutations: {
     setShowTask(state, showTasks) {
        state.showTasks = showTasks
 },
+setlogin(state, logininter) {
+  state.logininter = logininter
+},
 
 },
 actions: {
@@ -46,15 +53,36 @@ actions: {
               username: form.username,
               password: form.password
           })
-          console.log("the form data is " , response.data.error  );
-            commit('setToken', response.data.access_token)
+
+
+            commit('setlogin', response.data.is_success);
+            commit('setToken', response.data.access_token);
+            console.log("the form data is " , response.data  );
+            console.log("the form data is jjjjj " , this.getters.getloginToken  );
+            localStorage.setItem("loginToken", this.getters.getloginToken);
+
 
         } catch (error) {
            console.log("error" , error.response.data.error);
            commit('setUserError', error.response.data.error);
 
+
         }
     },
+
+    async me() {
+      try {
+          const response = await axios.get('http://127.0.0.1:8000/api/me', {
+              headers: {
+                  Authorization: `Bearer ${this.getters.getloginToken}`
+              }
+          })
+          console.log("me",response.data)
+
+      } catch (error) {
+         console.log(error);
+      }
+  },
 
     async creatTask({ commit } , form) {
         try {
@@ -87,7 +115,12 @@ actions: {
 
   async showTask({ commit }) {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/usertask')
+      const response = await axios.get('http://127.0.0.1:8000/api/usertask' , {
+        headers: {
+            Authorization: `Bearer  ${localStorage.getItem("loginToken")}`
+        }
+    })
+    console.log("token" , this.getters.getloginToken );
       commit('setShowTask', response.data)
 
     } catch (error) {
